@@ -4,6 +4,8 @@ import os
 import numpy as np
 import pandas as pd
 
+from IPython.display import display 
+
 class TestAssignmentNotebook(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -14,11 +16,12 @@ class TestAssignmentNotebook(unittest.TestCase):
         with open(notebook_path, "r", encoding="utf-8") as f:
             nb = nbformat.read(f, as_version=4)
         
-        cls.global_env = {}
+        cls.global_env = {"display": display}
         
         for cell in nb.cells:
             if cell.cell_type == "code":
-                exec(cell.source, cls.global_env)
+                exec(cell.source, cls.global_env) 
+
     
     def test_numpy_array_creation(self):
         """Test if a NumPy array is created correctly"""
@@ -35,9 +38,10 @@ class TestAssignmentNotebook(unittest.TestCase):
     def test_dataframe_columns(self):
         """Test if DataFrame contains required columns"""
         df = self.global_env.get("df", None)
-        required_columns = {"Name", "Age", "Score"}
+        required_columns = {"Name", "Age", "Salary"} 
         self.assertIsNotNone(df, "df not found in notebook")
         self.assertTrue(required_columns.issubset(df.columns), "Missing required columns in df")
+
 
 if __name__ == "__main__":
     unittest.main(argv=[''], exit=False)
